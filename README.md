@@ -18,12 +18,6 @@ AdMyBrand AI Dashboard is a comprehensive web application designed to streamline
 - **Audience Analytics**: Deep insights into target audience behavior and preferences
 - **Competitive Analysis**: Monitor competitor activities and market positioning
 
-### 🤖 AI-Powered Features
-- **Content Generation**: AI-assisted creation of ad copy, social media posts, and marketing materials
-- **Predictive Analytics**: Machine learning models for campaign optimization and trend prediction
-- **Automated Reporting**: Intelligent report generation with actionable insights
-- **Smart Recommendations**: AI-driven suggestions for campaign improvements and targeting
-
 ### 🔗 Integration Capabilities
 - **Social Media Platforms**: Facebook, Instagram, Twitter, LinkedIn, TikTok
 - **Advertising Networks**: Google Ads, Facebook Ads, Microsoft Advertising
@@ -39,27 +33,6 @@ AdMyBrand AI Dashboard is a comprehensive web application designed to streamline
 - **UI Library**: Material-UI (MUI) for consistent design system
 - **Styling**: Styled-components with theme support
 - **Data Visualization**: Chart.js and D3.js for interactive dashboards
-
-### Backend
-- **Runtime**: Node.js with Express.js framework
-- **Database**: PostgreSQL for relational data, Redis for caching
-- **Authentication**: JWT tokens with refresh token rotation
-- **File Storage**: AWS S3 for asset management
-- **Search**: Elasticsearch for advanced search capabilities
-
-### AI/ML Stack
-- **Machine Learning**: TensorFlow and PyTorch for model development
-- **Natural Language Processing**: OpenAI GPT models for content generation
-- **Computer Vision**: Google Vision API for image analysis
-- **Data Pipeline**: Apache Airflow for ETL processes
-- **Model Serving**: TensorFlow Serving for production ML models
-
-### Infrastructure
-- **Cloud Provider**: AWS (Amazon Web Services)
-- **Containerization**: Docker with Kubernetes orchestration
-- **CI/CD**: GitHub Actions for automated testing and deployment
-- **Monitoring**: New Relic for application performance monitoring
-- **Security**: AWS WAF, SSL/TLS encryption, OWASP compliance
 
 ## Installation & Setup
 
