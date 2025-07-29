@@ -5,6 +5,7 @@ import { Bell, Search, Settings, User, Calendar, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { useIsMobile } from "@/hooks/use-mobile"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,21 +27,24 @@ import { ChartsSection } from "@/components/charts-section"
 import { DataTableSection } from "@/components/data-table-section"
 import { cn } from "@/lib/utils"
 import { addDays, format } from "date-fns"
+import type { DateRange } from "react-day-picker"
 
 export function AnalyticsDashboard() {
   const [date, setDate] = useState<Date>()
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined
-    to: Date | undefined
-  }>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(2024, 0, 1),
     to: addDays(new Date(2024, 0, 1), 30),
   })
   const [mounted, setMounted] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleDateRangeSelect = (range: DateRange | undefined) => {
+    setDateRange(range)
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,7 +57,7 @@ export function AnalyticsDashboard() {
             mounted ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
           )}>
             <SidebarTrigger className="-ml-1" />
-            <div className="flex flex-1 items-center gap-2 px-3">
+            <div className="flex flex-1 items-center gap-2 px-3 min-w-0">
               <div className={cn(
                 "relative flex-1 max-w-md transition-all duration-700 delay-200",
                 mounted ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
@@ -66,7 +70,7 @@ export function AnalyticsDashboard() {
                 />
               </div>
               <div className={cn(
-                "ml-auto flex items-center gap-2 transition-all duration-700 delay-300",
+                "ml-auto flex items-center gap-1 sm:gap-2 transition-all duration-700 delay-300 min-w-0",
                 mounted ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
               )}>
                 {/* Date Range Filter */}
@@ -75,23 +79,22 @@ export function AnalyticsDashboard() {
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-[280px] justify-start text-left font-normal transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30",
+                        "hidden sm:flex min-w-[240px] max-w-[320px] xl:w-[300px] justify-start text-left font-normal transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 text-sm",
                         !dateRange && "text-muted-foreground"
                       )}
                     >
-                      <Calendar className="mr-2 h-4 w-4 transition-colors duration-200" />
-                      {dateRange?.from ? (
-                        dateRange.to ? (
-                          <>
-                            {format(dateRange.from, "LLL dd, y")} -{" "}
-                            {format(dateRange.to, "LLL dd, y")}
-                          </>
+                      <Calendar className="mr-2 h-4 w-4 transition-colors duration-200 flex-shrink-0" />
+                      <span className="truncate">
+                        {dateRange?.from ? (
+                          dateRange?.to ? (
+                            `${format(dateRange.from, "MMM dd, y")} - ${format(dateRange.to, "MMM dd, y")}`
+                          ) : (
+                            format(dateRange.from, "MMM dd, y")
+                          )
                         ) : (
-                          format(dateRange.from, "LLL dd, y")
-                        )
-                      ) : (
-                        <span>Pick a date range</span>
-                      )}
+                          "Pick a date range"
+                        )}
+                      </span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 animate-in fade-in-0 zoom-in-95 duration-200" align="start">
@@ -99,7 +102,40 @@ export function AnalyticsDashboard() {
                       initialFocus
                       mode="range"
                       defaultMonth={dateRange?.from}
-                      numberOfMonths={2}
+                      selected={dateRange}
+                      onSelect={handleDateRangeSelect}
+                      numberOfMonths={isMobile ? 1 : 2}
+                      className="rounded-md border-0"
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                {/* Mobile Date Range Filter */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      className="sm:hidden transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105"
+                      title={dateRange?.from && dateRange?.to 
+                        ? `${format(dateRange.from, "MMM dd, y")} - ${format(dateRange.to, "MMM dd, y")}`
+                        : dateRange?.from 
+                        ? format(dateRange.from, "MMM dd, y")
+                        : "Pick a date range"
+                      }
+                    >
+                      <Calendar className="h-4 w-4 transition-transform duration-200" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 animate-in fade-in-0 zoom-in-95 duration-200" align="end">
+                    <CalendarComponent
+                      initialFocus
+                      mode="range"
+                      defaultMonth={dateRange?.from}
+                      selected={dateRange}
+                      onSelect={handleDateRangeSelect}
+                      numberOfMonths={1}
+                      className="rounded-md border-0"
                     />
                   </PopoverContent>
                 </Popover>
@@ -110,7 +146,7 @@ export function AnalyticsDashboard() {
                     <Button 
                       variant="outline" 
                       size="icon"
-                      className="transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105"
+                      className="transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
                     >
                       <Filter className="h-4 w-4 transition-transform duration-200" />
                     </Button>
@@ -128,7 +164,7 @@ export function AnalyticsDashboard() {
                 <Button 
                   variant="outline" 
                   size="icon"
-                  className="relative transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105"
+                  className="relative transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
                 >
                   <Bell className="h-4 w-4 transition-transform duration-200 hover:rotate-12" />
                   <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs animate-pulse"></span>
@@ -138,7 +174,7 @@ export function AnalyticsDashboard() {
                 <Button 
                   variant="outline" 
                   size="icon"
-                  className="transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105"
+                  className="hidden md:flex transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
                 >
                   <Settings className="h-4 w-4 transition-transform duration-200 hover:rotate-90" />
                 </Button>
@@ -148,7 +184,7 @@ export function AnalyticsDashboard() {
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="ghost" 
-                      className="relative h-8 w-8 rounded-full transition-all duration-200 hover:bg-accent hover:scale-110"
+                      className="relative h-8 w-8 rounded-full transition-all duration-200 hover:bg-accent hover:scale-110 flex-shrink-0"
                     >
                       <Avatar className="h-8 w-8 transition-transform duration-200">
                         <AvatarImage src="/avatars/01.png" alt="@user" />

@@ -112,6 +112,24 @@
     animation: float 3s ease-in-out infinite;
   }
   
+  /* Responsive date picker improvements */
+  .date-picker-responsive {
+    @apply min-w-0 flex-shrink-0;
+  }
+  
+  .date-picker-text {
+    @apply truncate max-w-full;
+  }
+  
+  /* Header scaling improvements */
+  .header-responsive {
+    @apply flex items-center gap-1 sm:gap-2 min-w-0;
+  }
+  
+  .header-button-group {
+    @apply flex items-center gap-1 sm:gap-2 flex-shrink-0;
+  }
+  
   /* Hover effects */
   .hover-lift {
     transition: all 0.2s ease-in-out;

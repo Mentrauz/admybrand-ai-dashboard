@@ -1,7 +1,8 @@
 "use client"
 
-import { BarChart3, Home, LineChart, PieChart, Settings, TrendingUp, Users, DollarSign, FileText, Moon, Sun } from "lucide-react"
+import { BarChart3, Home, LineChart, PieChart, Settings, TrendingUp, Users, DollarSign, FileText, Moon, Sun, ArrowLeft } from "lucide-react"
 import { useTheme } from "next-themes"
+import Link from "next/link"
 
 import {
   Sidebar,
@@ -147,8 +148,21 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-border/50 p-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-700 delay-1000">
         <div className="flex items-center justify-between">
-          <div className="text-xs text-muted-foreground transition-colors duration-300 hover:text-foreground">
-            Theme
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 transition-all duration-300 hover:bg-accent hover:scale-110 hover:-translate-x-1 group"
+                title="Back to Landing Page"
+              >
+                <ArrowLeft className="h-4 w-4 transition-all duration-300 group-hover:text-primary" />
+                <span className="sr-only">Back to Landing Page</span>
+              </Button>
+            </Link>
+            <div className="text-xs text-muted-foreground transition-colors duration-300 hover:text-foreground">
+              Theme
+            </div>
           </div>
           <Button
             variant="ghost"

@@ -192,23 +192,23 @@ export function LandingPage() {
             
             <div className="hidden md:block">
               <div className={`ml-10 flex items-baseline space-x-8 ${isVisible ? 'animate-slideInRight' : 'opacity-0'}`}>
-                <a href="#features" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
+                {/* <a href="#features" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
                   Features
-                </a>
-                <a href="#analytics" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
+                </a> */}
+                {/* <a href="#analytics" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
                   Analytics
-                </a>
-                <a href="#pricing" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
+                </a> */}
+                {/* <a href="#pricing" className="text-muted-foreground hover:text-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 hover:scale-105 transform">
                   Pricing
-                </a>
+                </a> */}
                 <Link href="/dashboard">
                   <Button variant="outline" size="sm" className="transition-all duration-200 hover:scale-105 hover:shadow-lg">
-                    Dashboard
+                    Get Started
                   </Button>
                 </Link>
-                <Button size="sm" className="transition-all duration-200 hover:scale-105 hover:shadow-lg animate-pulse-gentle">
+                {/* <Button size="sm" className="transition-all duration-200 hover:scale-105 hover:shadow-lg animate-pulse-gentle">
                   Get Started
-                </Button>
+                </Button> */}
               </div>
             </div>
             
@@ -279,9 +279,9 @@ export function LandingPage() {
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              {/* <Button size="lg" variant="outline" className="text-lg px-8 py-6 transition-all duration-300 hover:scale-105 hover:shadow-lg">
                 Discover More
-              </Button>
+              </Button> */}
             </div>
             
             {/* Stats */}
@@ -403,9 +403,9 @@ export function LandingPage() {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+            {/* <Button size="lg" variant="outline" className="text-lg px-8 py-6 transition-all duration-300 hover:scale-105 hover:shadow-lg">
               Schedule Demo
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
