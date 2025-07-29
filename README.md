@@ -290,50 +290,7 @@ docker push your-registry/admybrand-dashboard:latest
 - Update documentation as needed
 - Ensure CI/CD pipeline passes
 
-## Roadmap
-
-### Q1 2025
-- [ ] Advanced AI content personalization
-- [ ] Real-time collaboration features
-- [ ] Mobile application development
-- [ ] Enhanced analytics dashboard
-
-### Q2 2025
-- [ ] Voice-to-text campaign creation
-- [ ] Automated A/B testing framework
-- [ ] Advanced competitor analysis
-- [ ] Integration with additional platforms
-
-### Q3 2025
-- [ ] Machine learning model marketplace
-- [ ] White-label solution offering
-- [ ] Advanced reporting and insights
-- [ ] Multi-language support
-
 ## Troubleshooting
-
-### Common Issues
-
-**Database Connection Issues**
-```bash
-# Check PostgreSQL status
-sudo service postgresql status
-
-# Restart PostgreSQL
-sudo service postgresql restart
-
-# Check connection
-psql -h localhost -U username -d admybrand
-```
-
-**Redis Connection Issues**
-```bash
-# Check Redis status
-redis-cli ping
-
-# Restart Redis
-sudo service redis-server restart
-```
 
 **Build Issues**
 ```bash
@@ -353,13 +310,7 @@ npm run build
 - **Documentation**: [Wiki](https://github.com/Mentrauz/admybrand-ai-dashboard/wiki)
 - **Issues**: [GitHub Issues](https://github.com/Mentrauz/admybrand-ai-dashboard/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/Mentrauz/admybrand-ai-dashboard/discussions)
-- **Email**: support@admybrand.com
-
-### Community
-
-- **Discord**: [Join our Discord server](https://discord.gg/admybrand)
-- **Twitter**: [@AdMyBrandAI](https://twitter.com/AdMyBrandAI)
-- **LinkedIn**: [AdMyBrand Company Page](https://linkedin.com/company/admybrand)
+- **Email**: 11soumyasingh2@gmail.com
 
 ## License
 
