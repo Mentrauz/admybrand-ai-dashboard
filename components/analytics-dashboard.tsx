@@ -25,6 +25,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { KPICards } from "@/components/kpi-cards"
 import { ChartsSection } from "@/components/charts-section"
 import { DataTableSection } from "@/components/data-table-section"
+import { NotificationTray } from "@/components/notification-tray"
 import { cn } from "@/lib/utils"
 import { addDays, format } from "date-fns"
 import type { DateRange } from "react-day-picker"
@@ -161,14 +162,7 @@ export function AnalyticsDashboard() {
                 </DropdownMenu>
 
                 {/* Notifications */}
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  className="relative transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
-                >
-                  <Bell className="h-4 w-4 transition-transform duration-200 hover:rotate-12" />
-                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs animate-pulse"></span>
-                </Button>
+                <NotificationTray />
 
                 {/* Settings */}
                 <Button 
