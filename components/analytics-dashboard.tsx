@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Bell, Search, Settings, User, Calendar, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +27,7 @@ import { KPICards } from "@/components/kpi-cards"
 import { ChartsSection } from "@/components/charts-section"
 import { DataTableSection } from "@/components/data-table-section"
 import { NotificationTray } from "@/components/notification-tray"
+import { SettingsTray } from "@/components/settings-tray"
 import { cn } from "@/lib/utils"
 import { addDays, format } from "date-fns"
 import type { DateRange } from "react-day-picker"
@@ -38,6 +40,7 @@ export function AnalyticsDashboard() {
   })
   const [mounted, setMounted] = useState(false)
   const isMobile = useIsMobile()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -45,6 +48,11 @@ export function AnalyticsDashboard() {
 
   const handleDateRangeSelect = (range: DateRange | undefined) => {
     setDateRange(range)
+  }
+
+  const handleLogout = () => {
+    // Redirect to landing page
+    router.push("/")
   }
 
   return (
@@ -165,13 +173,7 @@ export function AnalyticsDashboard() {
                 <NotificationTray />
 
                 {/* Settings */}
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  className="hidden md:flex transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
-                >
-                  <Settings className="h-4 w-4 transition-transform duration-200 hover:rotate-90" />
-                </Button>
+                <SettingsTray />
 
                 {/* User Menu */}
                 <DropdownMenu>
@@ -198,7 +200,12 @@ export function AnalyticsDashboard() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Profile</DropdownMenuItem>
                     <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Settings</DropdownMenuItem>
-                    <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Logout</DropdownMenuItem>
+                    <DropdownMenuItem 
+                      className="transition-colors duration-150 focus:bg-accent cursor-pointer" 
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
