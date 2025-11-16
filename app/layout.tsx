@@ -5,9 +5,9 @@ import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'ADmyBRAND Insights',
+  title: 'Analytics Insights',
   description: 'AI-Powered Analytics Dashboard for Digital Marketing Agencies',
-  generator: 'ADmyBRAND Insights',
+  generator: 'Analytics Insights',
 }
 
 export default function RootLayout({

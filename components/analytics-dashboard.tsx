@@ -221,7 +221,7 @@ export function AnalyticsDashboard() {
             )}>
               <div className="space-y-1">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground transition-all duration-300 hover:text-primary/90">
-                  ADmyBRAND Insights
+                  Analytics Insights
                 </h2>
                 <p className="text-muted-foreground transition-colors duration-300">
                   AI-powered analytics for digital marketing agencies. Welcome back! Here's what's happening with your business today.

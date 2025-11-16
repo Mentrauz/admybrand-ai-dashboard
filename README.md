@@ -1,8 +1,8 @@
-# AdMyBrand AI Dashboard 📊
+# Analytics AI Dashboard 📊
 
 A modern, AI-powered analytics dashboard for digital marketing agencies built with Next.js, TypeScript, and Tailwind CSS.
 
-🌐 **Live Demo**: https://admybrand-ai-dashboard.vercel.app/
+🌐 **Live Demo**: https://Analytics-ai-dashboard.vercel.app/
 
 ## ✨ Features
 

@@ -184,7 +184,7 @@ export function LandingPage() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className={`text-2xl font-bold text-foreground transition-all duration-500 ${isVisible ? 'animate-fadeIn' : 'opacity-0'}`}>
-                  ADmyBRAND
+                  Analytics
                   <span className="text-muted-foreground ml-1">Insights</span>
                 </div>
               </div>
@@ -349,7 +349,7 @@ export function LandingPage() {
               Trusted by Marketing Teams
             </h2>
             <p className="text-xl text-muted-foreground animate-fadeInUp delay-100">
-              See what our customers have to say about ADmyBRAND Insights
+              See what our customers have to say about Analytics Insights
             </p>
           </div>
           
@@ -362,7 +362,7 @@ export function LandingPage() {
                   ))}
                 </div>
                 <p className="text-muted-foreground mb-4">
-                  "ADmyBRAND Insights transformed how we approach data analysis. The AI-powered insights have helped us increase our ROI by 40%."
+                  "Analytics Insights transformed how we approach data analysis. The AI-powered insights have helped us increase our ROI by 40%."
                 </p>
                 <div className="font-semibold text-foreground">Sarah Johnson</div>
                 <div className="text-sm text-muted-foreground">Marketing Director, TechCorp</div>
@@ -394,7 +394,7 @@ export function LandingPage() {
             Ready to Transform Your Marketing Analytics?
           </h2>
           <p className="text-xl text-muted-foreground mb-8 animate-fadeInUp delay-100">
-            Join thousands of marketers who trust ADmyBRAND Insights for their data-driven decisions
+            Join thousands of marketers who trust Analytics Insights for their data-driven decisions
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fadeInUp delay-200">
             <Link href="/dashboard">
@@ -416,7 +416,7 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 animate-fadeInUp">
             <div className="col-span-1 md:col-span-2">
               <div className="text-2xl font-bold text-foreground mb-4 transition-colors duration-200 hover:text-primary">
-                ADmyBRAND
+                Analytics
                 <span className="text-muted-foreground ml-1">Insights</span>
               </div>
               <p className="text-muted-foreground mb-4 max-w-md">
@@ -444,7 +444,7 @@ export function LandingPage() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-muted-foreground animate-fadeInUp delay-300">
-            <p>&copy; 2024 ADmyBRAND Insights. All rights reserved.</p>
+            <p>&copy; 2024 Analytics Insights. All rights reserved.</p>
           </div>
         </div>
       </footer>

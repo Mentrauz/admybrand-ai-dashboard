@@ -22,7 +22,7 @@ interface Notification {
 const testNotifications: Notification[] = [
   {
     id: "1",
-    title: "Welcome to ADmyBRAND!",
+    title: "Welcome to Analytics!",
     message: "Your analytics dashboard is ready. Start exploring your data insights.",
     type: "info",
     timestamp: "2 minutes ago",

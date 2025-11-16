@@ -80,7 +80,7 @@ export function AppSidebar() {
             <BarChart3 className="h-4 w-4 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold transition-colors duration-300 hover:text-primary">ADmyBRAND</h2>
+            <h2 className="text-lg font-semibold transition-colors duration-300 hover:text-primary">Analytics</h2>
             <p className="text-xs text-muted-foreground transition-colors duration-300">Analytics Dashboard</p>
           </div>
         </div>
