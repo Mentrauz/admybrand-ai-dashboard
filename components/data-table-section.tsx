@@ -1,116 +1,34 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { 
-  ChevronDown, 
-  ChevronUp, 
-  ChevronsUpDown, 
-  Search, 
-  Download, 
-  Filter,
+import {
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Search,
+  Download,
   ChevronLeft,
   ChevronRight
 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-// Extended mock data
-const tableData = [
-  {
-    id: "1",
-    customer: "John Doe",
-    email: "john@example.com",
-    status: "Active",
-    revenue: 1234.56,
-    lastActivity: "2 hours ago",
-    joinDate: "2024-01-15",
-    region: "North America",
-  },
-  {
-    id: "2", 
-    customer: "Jane Smith",
-    email: "jane@example.com",
-    status: "Inactive",
-    revenue: 987.65,
-    lastActivity: "1 day ago",
-    joinDate: "2024-02-20",
-    region: "Europe",
-  },
-  {
-    id: "3",
-    customer: "Bob Johnson", 
-    email: "bob@example.com",
-    status: "Active",
-    revenue: 2345.67,
-    lastActivity: "30 minutes ago",
-    joinDate: "2024-01-10",
-    region: "North America",
-  },
-  {
-    id: "4",
-    customer: "Alice Brown",
-    email: "alice@example.com", 
-    status: "Pending",
-    revenue: 567.89,
-    lastActivity: "3 hours ago",
-    joinDate: "2024-03-05",
-    region: "Asia",
-  },
-  {
-    id: "5",
-    customer: "Charlie Davis",
-    email: "charlie@example.com",
-    status: "Active", 
-    revenue: 3456.78,
-    lastActivity: "1 hour ago",
-    joinDate: "2024-01-25",
-    region: "Europe",
-  },
-  {
-    id: "6",
-    customer: "Diana Wilson",
-    email: "diana@example.com",
-    status: "Inactive",
-    revenue: 890.12,
-    lastActivity: "2 days ago", 
-    joinDate: "2024-02-14",
-    region: "North America",
-  },
-  {
-    id: "7",
-    customer: "Ethan Moore",
-    email: "ethan@example.com",
-    status: "Active",
-    revenue: 4567.89,
-    lastActivity: "15 minutes ago",
-    joinDate: "2024-03-01",
-    region: "Asia",
-  },
-  {
-    id: "8", 
-    customer: "Fiona Taylor",
-    email: "fiona@example.com",
-    status: "Pending",
-    revenue: 1234.56,
-    lastActivity: "4 hours ago",
-    joinDate: "2024-02-28",
-    region: "Europe",
-  },
-]
 
 type SortField = 'customer' | 'revenue' | 'lastActivity' | 'status'
+
+interface Customer {
+  _id: string
+  customer: string
+  email: string
+  status: string
+  revenue: number
+  lastActivity: string
+  joinDate: string
+  region: string
+}
 
 export function DataTableSection() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -120,44 +38,44 @@ export function DataTableSection() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5)
+  const [data, setData] = useState<Customer[]>([])
+  const [totalItems, setTotalItems] = useState(0)
+  const [loading, setLoading] = useState(true)
 
-  // Filter and sort data
-  const filteredAndSortedData = useMemo(() => {
-    let filtered = tableData.filter(item => {
-      const matchesSearch = item.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.email.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = statusFilter === 'all' || item.status === statusFilter
-      const matchesRegion = regionFilter === 'all' || item.region === regionFilter
-      
-      return matchesSearch && matchesStatus && matchesRegion
-    })
+  useEffect(() => {
+    fetchData()
+  }, [searchTerm, statusFilter, regionFilter, sortField, sortOrder, currentPage])
 
-    // Sort data
-    filtered.sort((a, b) => {
-      let aValue: any = a[sortField]
-      let bValue: any = b[sortField]
-      
-      if (sortField === 'revenue') {
-        aValue = a.revenue
-        bValue = b.revenue
-      } else if (typeof aValue === 'string') {
-        aValue = a[sortField].toLowerCase()
-        bValue = b[sortField].toLowerCase()
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString(),
+        sortField,
+        sortOrder,
+        search: searchTerm,
+        status: statusFilter,
+        region: regionFilter
+      })
+
+      const response = await fetch(`/api/customers?${params}`)
+      const result = await response.json()
+
+      if (result.success) {
+        setData(result.data)
+        setTotalItems(result.pagination.total)
       }
+    } catch (error) {
+      console.error('Failed to fetch customers:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1
-      return 0
-    })
-
-    return filtered
-  }, [searchTerm, statusFilter, regionFilter, sortField, sortOrder])
-
-  // Pagination
-  const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredAndSortedData.slice(startIndex, endIndex)
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -170,8 +88,8 @@ export function DataTableSection() {
 
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) return <ChevronsUpDown className="h-4 w-4 transition-colors duration-200 group-hover:text-primary" />
-    return sortOrder === 'asc' ? 
-      <ChevronUp className="h-4 w-4 text-primary transition-all duration-200" /> : 
+    return sortOrder === 'asc' ?
+      <ChevronUp className="h-4 w-4 text-primary transition-all duration-200" /> :
       <ChevronDown className="h-4 w-4 text-primary transition-all duration-200" />
   }
 
@@ -179,7 +97,7 @@ export function DataTableSection() {
     const headers = ['Customer', 'Email', 'Status', 'Revenue', 'Last Activity', 'Join Date', 'Region']
     const csvContent = [
       headers.join(','),
-      ...filteredAndSortedData.map(row => [
+      ...data.map(row => [
         row.customer,
         row.email,
         row.status,
@@ -213,9 +131,9 @@ export function DataTableSection() {
                 Manage and analyze your customer data with advanced filtering and sorting
               </CardDescription>
             </div>
-            <Button 
-              onClick={exportToCSV} 
-              variant="outline" 
+            <Button
+              onClick={exportToCSV}
+              variant="outline"
               size="sm"
               className="transition-all duration-300 hover:bg-accent hover:text-accent-foreground hover:border-primary/20 hover:shadow-sm hover:scale-105 group"
             >
@@ -232,11 +150,17 @@ export function DataTableSection() {
               <Input
                 placeholder="Search customers..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  setCurrentPage(1)
+                }}
                 className="pl-8 transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 hover:border-primary/30 focus:scale-[1.01] transform-gpu"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={(val) => {
+              setStatusFilter(val)
+              setCurrentPage(1)
+            }}>
               <SelectTrigger className="w-full sm:w-[140px] transition-all duration-300 hover:border-primary/30 focus:ring-2 focus:ring-primary/20 hover:shadow-sm hover:scale-105">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -247,7 +171,10 @@ export function DataTableSection() {
                 <SelectItem value="Pending" className="transition-all duration-200 focus:bg-accent hover:bg-accent/50">Pending</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={regionFilter} onValueChange={setRegionFilter}>
+            <Select value={regionFilter} onValueChange={(val) => {
+              setRegionFilter(val)
+              setCurrentPage(1)
+            }}>
               <SelectTrigger className="w-full sm:w-[140px] transition-all duration-300 hover:border-primary/30 focus:ring-2 focus:ring-primary/20 hover:shadow-sm hover:scale-105">
                 <SelectValue placeholder="Region" />
               </SelectTrigger>
@@ -292,43 +219,57 @@ export function DataTableSection() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentData.map((row, index) => (
-                  <TableRow 
-                    key={row.id} 
-                    className="hover:bg-muted/40 transition-all duration-300 cursor-pointer group animate-in fade-in-0 slide-in-from-left-2"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      animationDuration: '400ms'
-                    }}
-                  >
-                    <TableCell className="font-medium transition-all duration-300 group-hover:text-primary group-hover:scale-105 origin-left">
-                      {row.customer}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
-                      {row.email}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          row.status === "Active" ? "default" : 
-                          row.status === "Inactive" ? "secondary" : "outline"
-                        }
-                        className="transition-all duration-300 hover:opacity-80 hover:scale-105 cursor-pointer"
-                      >
-                        {row.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="font-mono transition-all duration-300 group-hover:text-primary group-hover:font-semibold group-hover:scale-105 origin-left">
-                      ${row.revenue.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
-                      {row.lastActivity}
-                    </TableCell>
-                    <TableCell className="transition-all duration-300 group-hover:text-primary/90 group-hover:font-medium">
-                      {row.region}
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      Loading...
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : data.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      No results found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  data.map((row, index) => (
+                    <TableRow
+                      key={row._id}
+                      className="hover:bg-muted/40 transition-all duration-300 cursor-pointer group animate-in fade-in-0 slide-in-from-left-2"
+                      style={{
+                        animationDelay: `${index * 50}ms`,
+                        animationDuration: '400ms'
+                      }}
+                    >
+                      <TableCell className="font-medium transition-all duration-300 group-hover:text-primary group-hover:scale-105 origin-left">
+                        {row.customer}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
+                        {row.email}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            row.status === "Active" ? "default" :
+                              row.status === "Inactive" ? "secondary" : "outline"
+                          }
+                          className="transition-all duration-300 hover:opacity-80 hover:scale-105 cursor-pointer"
+                        >
+                          {row.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-mono transition-all duration-300 group-hover:text-primary group-hover:font-semibold group-hover:scale-105 origin-left">
+                        ${row.revenue.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
+                        {row.lastActivity}
+                      </TableCell>
+                      <TableCell className="transition-all duration-300 group-hover:text-primary/90 group-hover:font-medium">
+                        {row.region}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
@@ -336,15 +277,15 @@ export function DataTableSection() {
           {/* Pagination */}
           <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-700">
             <div className="text-sm text-muted-foreground transition-colors duration-300">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedData.length)} of{" "}
-              {filteredAndSortedData.length} results
+              Showing {data.length > 0 ? startIndex + 1 : 0} to {Math.min(endIndex, totalItems)} of{" "}
+              {totalItems} results
             </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
+                disabled={currentPage === 1 || loading}
                 className="transition-all duration-300 hover:bg-accent hover:text-accent-foreground disabled:opacity-50 hover:scale-105 group"
               >
                 <ChevronLeft className="h-4 w-4 transition-all duration-300 group-hover:-translate-x-1" />
@@ -367,7 +308,7 @@ export function DataTableSection() {
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || loading}
                 className="transition-all duration-300 hover:bg-accent hover:text-accent-foreground disabled:opacity-50 hover:scale-105 group"
               >
                 Next

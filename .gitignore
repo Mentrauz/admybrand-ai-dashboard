@@ -26,3 +26,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 AI_USAGE_REPORT.md
+.env.local
