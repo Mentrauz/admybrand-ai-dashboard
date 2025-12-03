@@ -21,27 +21,27 @@ import { Button } from "@/components/ui/button"
 const navigationItems = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/dashboard",
     icon: Home,
   },
   {
     title: "Analytics",
-    url: "#",
+    url: "/analytics",
     icon: BarChart3,
   },
   {
     title: "Revenue",
-    url: "#",
+    url: "/revenue",
     icon: DollarSign,
   },
   {
     title: "Users",
-    url: "#",
+    url: "/users",
     icon: Users,
   },
   {
     title: "Reports",
-    url: "#",
+    url: "/reports",
     icon: FileText,
   },
 ]
@@ -94,21 +94,21 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {navigationItems.map((item, index) => (
-                <SidebarMenuItem 
+                <SidebarMenuItem
                   key={item.title}
                   className="animate-in fade-in-0 slide-in-from-left-3 duration-500"
                   style={{
                     animationDelay: `${300 + index * 100}ms`
                   }}
                 >
-                  <SidebarMenuButton 
-                    asChild 
+                  <SidebarMenuButton
+                    asChild
                     className="transition-all duration-300 hover:bg-accent hover:text-accent-foreground rounded-lg px-3 py-2 group hover:scale-105 hover:shadow-sm"
                   >
-                    <a href={item.url} className="flex items-center gap-3">
+                    <Link href={item.url} className="flex items-center gap-3">
                       <item.icon className="h-4 w-4 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" />
                       <span className="transition-all duration-300 group-hover:translate-x-1">{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

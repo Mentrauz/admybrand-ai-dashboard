@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Bell, Search, Settings, User, Calendar, Filter } from "lucide-react"
+import { Bell, Search, Settings, User, Calendar, Filter, BarChart3, TrendingUp, PieChart, Activity } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
@@ -31,14 +31,17 @@ import { SettingsTray } from "@/components/settings-tray"
 import { cn } from "@/lib/utils"
 import { addDays, format } from "date-fns"
 import type { DateRange } from "react-day-picker"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export function AnalyticsDashboard() {
+export function AnalyticsPage() {
   const [date, setDate] = useState<Date>()
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(2024, 0, 1),
     to: addDays(new Date(2024, 0, 1), 30),
   })
   const [mounted, setMounted] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview")
   const isMobile = useIsMobile()
   const router = useRouter()
 
@@ -54,6 +57,33 @@ export function AnalyticsDashboard() {
     // Redirect to landing page
     router.push("/")
   }
+
+  const analyticsInsights = [
+    {
+      title: "Traffic Analysis",
+      description: "Deep dive into user behavior and traffic patterns",
+      icon: Activity,
+      metrics: ["Page views", "Session duration", "Bounce rate", "Conversion funnel"]
+    },
+    {
+      title: "Performance Metrics",
+      description: "Monitor system performance and user experience",
+      icon: TrendingUp,
+      metrics: ["Load times", "Error rates", "Uptime", "API response times"]
+    },
+    {
+      title: "Revenue Analytics",
+      description: "Comprehensive revenue tracking and forecasting",
+      icon: BarChart3,
+      metrics: ["Revenue streams", "Customer LTV", "Churn analysis", "Growth projections"]
+    },
+    {
+      title: "User Segmentation",
+      description: "Advanced user behavior segmentation and insights",
+      icon: PieChart,
+      metrics: ["Demographics", "Behavior clusters", "Retention cohorts", "Engagement scores"]
+    }
+  ]
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,10 +102,10 @@ export function AnalyticsDashboard() {
                 mounted ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
               )}>
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground transition-colors duration-300" />
-                <Input 
-                  type="search" 
-                  placeholder="Search insights..." 
-                  className="pl-8 transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 hover:border-primary/30" 
+                <Input
+                  type="search"
+                  placeholder="Search analytics..."
+                  className="pl-8 transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 hover:border-primary/30"
                 />
               </div>
               <div className={cn(
@@ -122,13 +152,13 @@ export function AnalyticsDashboard() {
                 {/* Mobile Date Range Filter */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="icon"
                       className="sm:hidden transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105"
-                      title={dateRange?.from && dateRange?.to 
+                      title={dateRange?.from && dateRange?.to
                         ? `${format(dateRange.from, "MMM dd, y")} - ${format(dateRange.to, "MMM dd, y")}`
-                        : dateRange?.from 
+                        : dateRange?.from
                         ? format(dateRange.from, "MMM dd, y")
                         : "Pick a date range"
                       }
@@ -152,8 +182,8 @@ export function AnalyticsDashboard() {
                 {/* Filter Button */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="icon"
                       className="transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:border-primary/30 hover:scale-105 flex-shrink-0"
                     >
@@ -161,11 +191,13 @@ export function AnalyticsDashboard() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="animate-in fade-in-0 zoom-in-95 duration-200">
-                    <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
+                    <DropdownMenuLabel>Analytics Filters</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Real-time</DropdownMenuItem>
+                    <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Last 24 hours</DropdownMenuItem>
                     <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Last 7 days</DropdownMenuItem>
                     <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Last 30 days</DropdownMenuItem>
-                    <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Last 90 days</DropdownMenuItem>
+                    <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Custom range</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -178,8 +210,8 @@ export function AnalyticsDashboard() {
                 {/* User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="relative h-8 w-8 rounded-full transition-all duration-200 hover:bg-accent hover:scale-110 flex-shrink-0"
                     >
                       <Avatar className="h-8 w-8 transition-transform duration-200">
@@ -205,8 +237,8 @@ export function AnalyticsDashboard() {
                       Profile
                     </DropdownMenuItem>
                     <DropdownMenuItem className="transition-colors duration-150 focus:bg-accent">Settings</DropdownMenuItem>
-                    <DropdownMenuItem 
-                      className="transition-colors duration-150 focus:bg-accent cursor-pointer" 
+                    <DropdownMenuItem
+                      className="transition-colors duration-150 focus:bg-accent cursor-pointer"
                       onClick={handleLogout}
                     >
                       Logout
@@ -226,37 +258,125 @@ export function AnalyticsDashboard() {
             )}>
               <div className="space-y-1">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground transition-all duration-300 hover:text-primary/90">
-                  Analytics Insights
+                  Advanced Analytics
                 </h2>
                 <p className="text-muted-foreground transition-colors duration-300">
-                  AI-powered analytics for digital marketing agencies. Welcome back! Here's what's happening with your business today.
+                  Deep insights and comprehensive analytics for data-driven decision making.
                 </p>
               </div>
             </div>
 
-            {/* KPI Cards */}
-            <div className={cn(
-              "transition-all duration-800 delay-300",
-              mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-            )}>
-              <KPICards />
-            </div>
+            {/* Analytics Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="overview" className="transition-all duration-200">Overview</TabsTrigger>
+                <TabsTrigger value="traffic" className="transition-all duration-200">Traffic</TabsTrigger>
+                <TabsTrigger value="performance" className="transition-all duration-200">Performance</TabsTrigger>
+                <TabsTrigger value="insights" className="transition-all duration-200">Insights</TabsTrigger>
+              </TabsList>
 
-            {/* Charts Section */}
-            <div className={cn(
-              "transition-all duration-800 delay-500",
-              mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-            )}>
-              <ChartsSection />
-            </div>
+              <TabsContent value="overview" className="space-y-4">
+                {/* KPI Cards */}
+                <div className={cn(
+                  "transition-all duration-800 delay-300",
+                  mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                )}>
+                  <KPICards />
+                </div>
 
-            {/* Data Table Section */}
-            <div className={cn(
-              "transition-all duration-800 delay-700",
-              mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-            )}>
-              <DataTableSection />
-            </div>
+                {/* Charts Section */}
+                <div className={cn(
+                  "transition-all duration-800 delay-500",
+                  mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                )}>
+                  <ChartsSection />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="traffic" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  {analyticsInsights[0].metrics.map((metric, index) => (
+                    <Card key={metric} className={cn(
+                      "transition-all duration-500 hover:shadow-lg hover:scale-105",
+                      mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                    )} style={{ animationDelay: `${index * 100}ms` }}>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">{metric}</CardTitle>
+                        <Activity className="h-4 w-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">
+                          {Math.floor(Math.random() * 10000) + 1000}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          +{Math.floor(Math.random() * 20) + 5}% from last month
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <ChartsSection />
+              </TabsContent>
+
+              <TabsContent value="performance" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  {analyticsInsights[1].metrics.map((metric, index) => (
+                    <Card key={metric} className={cn(
+                      "transition-all duration-500 hover:shadow-lg hover:scale-105",
+                      mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                    )} style={{ animationDelay: `${index * 100}ms` }}>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">{metric}</CardTitle>
+                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">
+                          {metric.includes('time') ? `${(Math.random() * 5 + 1).toFixed(2)}s` :
+                           metric.includes('rate') ? `${(Math.random() * 10 + 90).toFixed(1)}%` :
+                           Math.floor(Math.random() * 100) + '%'}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {Math.random() > 0.5 ? '+' : '-'}{Math.floor(Math.random() * 15) + 1}% from last week
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <ChartsSection />
+              </TabsContent>
+
+              <TabsContent value="insights" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  {analyticsInsights.slice(2).map((insight, index) => (
+                    <Card key={insight.title} className={cn(
+                      "transition-all duration-500 hover:shadow-lg hover:scale-105",
+                      mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                    )} style={{ animationDelay: `${index * 100}ms` }}>
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <insight.icon className="h-5 w-5 text-primary" />
+                          <CardTitle>{insight.title}</CardTitle>
+                        </div>
+                        <CardDescription>{insight.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          {insight.metrics.map((metric) => (
+                            <div key={metric} className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">{metric}</span>
+                              <span className="font-medium">
+                                {Math.floor(Math.random() * 10000) + 1000}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <DataTableSection />
+              </TabsContent>
+            </Tabs>
           </div>
         </SidebarInset>
       </SidebarProvider>
