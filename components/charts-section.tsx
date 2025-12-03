@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine } from 'recharts'
@@ -42,12 +42,16 @@ export function ChartsSection() {
   const [performanceData, setPerformanceData] = useState<any[]>([])
   const [isUpdating, setIsUpdating] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     fetchData()
   }, [])
 
   const fetchData = async () => {
+    if (isFetching) return // Prevent multiple simultaneous requests
+
+    setIsFetching(true)
     try {
       const response = await fetch('/api/dashboard')
       const result = await response.json()
@@ -60,14 +64,17 @@ export function ChartsSection() {
       console.error('Failed to fetch dashboard data:', error)
     } finally {
       setLoading(false)
+      setIsFetching(false)
     }
   }
 
-  // Real-time updates from backend
+  // Real-time updates from backend (reduced frequency for better performance)
   useEffect(() => {
-    if (loading) return
+    if (loading || isFetching) return
 
     const interval = setInterval(async () => {
+      if (isFetching) return // Skip if already fetching
+
       setIsUpdating(true)
 
       try {
@@ -91,10 +98,10 @@ export function ChartsSection() {
 
       // Brief visual indicator of update
       setTimeout(() => setIsUpdating(false), 500)
-    }, 4000) // Update every 4 seconds (slightly offset from KPI cards)
+    }, 10000) // Reduced from 4s to 10s for better performance
 
     return () => clearInterval(interval)
-  }, [loading])
+  }, [loading, isFetching])
 
   if (loading) {
     return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -473,3 +480,5 @@ export function ChartsSection() {
     </div>
   )
 }
+
+export default memo(ChartsSection)

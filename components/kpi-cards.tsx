@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Users, TrendingUp, Percent } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -40,6 +40,7 @@ export function KPICards() {
   const [mounted, setMounted] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -47,6 +48,9 @@ export function KPICards() {
   }, [])
 
   const fetchData = async () => {
+    if (isFetching) return // Prevent multiple simultaneous requests
+
+    setIsFetching(true)
     try {
       const response = await fetch('/api/dashboard')
       const result = await response.json()
@@ -57,14 +61,17 @@ export function KPICards() {
       console.error('Failed to fetch KPI data:', error)
     } finally {
       setLoading(false)
+      setIsFetching(false)
     }
   }
 
-  // Real-time updates from backend
+  // Real-time updates from backend (reduced frequency for better performance)
   useEffect(() => {
-    if (loading) return
+    if (loading || isFetching) return
 
     const interval = setInterval(async () => {
+      if (isFetching) return // Skip if already fetching
+
       setIsUpdating(true)
 
       try {
@@ -86,17 +93,17 @@ export function KPICards() {
 
       // Brief visual indicator of update
       setTimeout(() => setIsUpdating(false), 300)
-    }, 3000) // Update every 3 seconds
+    }, 8000) // Reduced from 3s to 8s for better performance
 
     return () => clearInterval(interval)
-  }, [loading])
+  }, [loading, isFetching])
 
-  const formatValue = (value: number, prefix: string, suffix: string) => {
+  const formatValue = useMemo(() => (value: number, prefix: string, suffix: string) => {
     if (prefix === "$") {
       return `$${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
     }
     return `${prefix}${value.toLocaleString(undefined, { maximumFractionDigits: suffix === "%" ? 1 : 0 })}${suffix}`
-  }
+  }, [])
 
   if (loading) {
     return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -175,3 +182,5 @@ export function KPICards() {
     </div>
   )
 }
+
+export default memo(KPICards)

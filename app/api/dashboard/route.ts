@@ -119,13 +119,27 @@ const initialPerformanceData = [
     },
 ];
 
-// Function to generate realistic fluctuations
-const generateFluctuation = (baseValue: number, trend: number, isPercentage: boolean = false) => {
+// Optimized function to generate realistic fluctuations with caching
+const fluctuationCache = new Map<string, number>();
+
+const generateFluctuation = (baseValue: number, trend: number, isPercentage: boolean = false, cacheKey?: string) => {
+    // Use cache if available and cacheKey provided
+    if (cacheKey && fluctuationCache.has(cacheKey)) {
+        return fluctuationCache.get(cacheKey)!;
+    }
+
     const maxChange = isPercentage ? 0.1 : baseValue * 0.002; // 0.1 for percentages, 0.2% for regular values
     const randomChange = (Math.random() - 0.5) * 2 * maxChange;
     const trendInfluence = trend * (Math.random() * 0.5 + 0.5); // 50-100% of trend applied
 
-    return baseValue + randomChange + trendInfluence;
+    const result = baseValue + randomChange + trendInfluence;
+
+    // Cache the result if cacheKey provided
+    if (cacheKey) {
+        fluctuationCache.set(cacheKey, result);
+    }
+
+    return result;
 };
 
 export async function GET() {
@@ -194,10 +208,16 @@ export async function PUT() {
         let kpis, revenue, traffic, performance;
 
         if (!db) {
-            // If database not connected, simulate updates on mock data
-            kpis = initialKpiData.map(kpi => {
+            // Clear cache every 10 calls to prevent stale data
+            if (Math.random() < 0.1) {
+                fluctuationCache.clear();
+            }
+
+            // If database not connected, simulate updates on mock data with caching
+            kpis = initialKpiData.map((kpi, index) => {
                 const isPercentage = kpi.suffix === "%";
-                const newValue = generateFluctuation(kpi.baseValue, kpi.trend, isPercentage);
+                const cacheKey = `kpi-${index}-${Date.now()}`;
+                const newValue = generateFluctuation(kpi.baseValue, kpi.trend, isPercentage, cacheKey);
                 const changeFromBase = ((newValue - kpi.baseValue) / kpi.baseValue) * 100;
 
                 return {

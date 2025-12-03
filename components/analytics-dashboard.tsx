@@ -23,14 +23,42 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { KPICards } from "@/components/kpi-cards"
-import { ChartsSection } from "@/components/charts-section"
-import { DataTableSection } from "@/components/data-table-section"
 import { NotificationTray } from "@/components/notification-tray"
 import { SettingsTray } from "@/components/settings-tray"
 import { cn } from "@/lib/utils"
 import { addDays, format } from "date-fns"
 import type { DateRange } from "react-day-picker"
+import dynamic from 'next/dynamic'
+
+// Dynamic imports for better performance
+const KPICards = dynamic(() => import('@/components/kpi-cards'), {
+  loading: () => (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="h-[120px] animate-pulse bg-muted/50 rounded-lg" />
+      ))}
+    </div>
+  )
+})
+
+const ChartsSection = dynamic(() => import('@/components/charts-section'), {
+  loading: () => (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className={cn(
+          "h-[400px] animate-pulse bg-muted/50 rounded-lg",
+          i === 3 && "col-span-full"
+        )} />
+      ))}
+    </div>
+  )
+})
+
+const DataTableSection = dynamic(() => import('@/components/data-table-section'), {
+  loading: () => (
+    <div className="rounded-md border animate-pulse bg-muted/50 h-[400px]" />
+  )
+})
 
 export function AnalyticsDashboard() {
   const [date, setDate] = useState<Date>()
