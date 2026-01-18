@@ -1,148 +1,88 @@
-# Analytics AI Dashboard 📊
+# Analytics Insights Dashboard 📊
 
-A modern, AI-powered analytics dashboard for digital marketing agencies built with Next.js, TypeScript, and Tailwind CSS.
+A polished analytics experience for digital marketing teams built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui**. It ships with real-time-like KPI cards, live charts, rich tables, and themed navigation across multiple analytics surfaces.
 
-🌐 **Live Demo**: https://Analytics-ai-dashboard.vercel.app/
+## What’s inside
+- **Landing & marketing**: animated hero, feature highlights, testimonial and CTA sections (`/`).
+- **Interactive dashboards**: KPI cards with live updates, charts (line/bar/pie), and customer data tables with filtering, sorting, pagination, and CSV export (`/dashboard`, `/analytics`).
+- **Domain pages**: dedicated views for revenue, users, reports, and profile management (`/revenue`, `/users`, `/reports`, `/dashboard/profile`).
+- **Theming & UX**: light/dark toggle, responsive layouts, animated transitions, and mobile-ready navigation drawer.
+- **Data layer**: API routes backed by MongoDB when available, with automatic mock-data fallback so the UI stays functional without a database.
 
-## ✨ Features
+## Tech Stack
+- Next.js 14 (App Router) + TypeScript
+- Tailwind CSS + shadcn/ui (Radix primitives) + next-themes
+- Recharts for visualizations, date-fns for date handling
+- Mongoose for persistence (optional; mocked data when no DB)
 
-### 🎯 Core Analytics
-- **Real-time KPI Tracking** - Revenue, users, conversions with live updates
-- **Interactive Charts** - Line, bar, and pie charts with Recharts
-- **Advanced Data Tables** - Sortable, filterable customer data with pagination
-- **Responsive Design** - Mobile-first approach with dark/light themes
-
-### 🎨 Modern UI/UX
-- **shadcn/ui Components** - Professional component library
-- **Smooth Animations** - Engaging user interactions
-- **Theme Support** - Dark/light mode switching
-- **Mobile Optimized** - Works seamlessly on all devices
-
-### 📈 Dashboard Sections
-- **Landing Page** - Professional marketing showcase
-- **Analytics Dashboard** - Comprehensive metrics overview
-- **Sidebar Navigation** - Easy access to different sections
-- **Performance Metrics** - Visual performance indicators
-
-## 🚀 Quick Start
-
+## Getting Started
 ### Prerequisites
-- Node.js 16+ 
-- npm or yarn
+- Node.js **18.17+**
+- npm
 
-### Installation
-
+### Setup
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/analytics-dashboard.git
+git clone <repo-url>
 cd analytics-dashboard
-
-# Install dependencies
 npm install
 
-# Start development server
+# start dev server (Turbo)
 npm run dev
 ```
+Visit http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
-
-### Build for Production
-
+### Build & serve production
 ```bash
 npm run build
 npm start
 ```
 
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Components**: shadcn/ui + Radix UI
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **Fonts**: Geist Sans & Mono
-
-## 📱 Project Structure
-
-```
-├── app/                  # Next.js App Router
-│   ├── page.tsx         # Landing page
-│   ├── dashboard/       # Dashboard pages
-│   └── layout.tsx       # Root layout
-├── components/          # React components
-│   ├── ui/             # shadcn/ui components
-│   ├── analytics-dashboard.tsx
-│   ├── landing-page.tsx
-│   └── ...
-├── lib/                # Utilities
-└── hooks/              # Custom React hooks
-```
-
-## 🎨 Key Components
-
-### Landing Page
-- Feature showcase with animations
-- Professional marketing design
-- Call-to-action sections
-
-### Analytics Dashboard
-- **KPI Cards**: Real-time metrics with trend indicators
-- **Charts Section**: Multiple chart types with live data
-- **Data Table**: Advanced filtering and sorting
-- **Sidebar**: Navigation with theme toggle
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env.local` file for any future API integrations:
-
+## Environment
+Create `.env.local` (only needed if you want real MongoDB persistence):
 ```bash
-# Add your environment variables here
-NEXT_PUBLIC_API_URL=your-api-url
+MONGODB_URI=mongodb://localhost:27017/analytics-dashboard
 ```
+- If `MONGODB_URI` is unset or the DB is unreachable, the API automatically serves and updates mock data so the UI still works.
 
-### Customization
-- **Colors**: Modify `tailwind.config.ts` for custom color schemes
-- **Components**: Extend `components/ui/` for additional UI elements
-- **Data**: Update mock data in component files for real data integration
+## Scripts
+- `npm run dev` — start Next.js dev server (Turbo)
+- `npm run build` — production build
+- `npm run start` — start built app
+- `npm run lint` — lint with Next.js defaults
 
-## 📊 Demo Data
+## API Routes (app/api)
+- `GET /api/dashboard` — returns KPI, revenue, traffic, and performance data (seeds collections when empty; falls back to mock data if no DB).
+- `PUT /api/dashboard` — simulates live updates (used by the frontend polling interval for KPI/cards/charts).
+- `POST /api/dashboard` — background trigger to refresh data without returning payload.
+- `GET /api/customers` — paginated + filterable customers.
+  - Query params: `page`, `limit`, `search`, `status`, `region`, `sortField`, `sortOrder`.
+  - Responds with `{ data, pagination: { total, page, limit, totalPages } }`; uses mock data when DB is unavailable.
+- `POST /api/customers` — create a customer record (requires DB connectivity).
 
-The dashboard currently uses mock data to demonstrate functionality:
-- Revenue trends and user growth
-- Traffic source breakdown
-- Customer data with various metrics
-- Performance indicators and KPIs
+## UI Routes
+- `/` — Landing page with CTAs into the dashboard.
+- `/dashboard` — Core dashboard shell with KPI cards, charts, data table, notifications/settings trays, and theme toggle.
+- `/analytics` — Tabbed deep-dive analytics (overview/traffic/performance/insights) reusing live cards, charts, and table.
+- `/revenue` — Revenue KPIs, streams, customer segments, and forecasting views.
+- `/users` — User metrics, segmentation, engagement, and directory views.
+- `/reports` — Generated/scheduled reports, templates, and categories with export controls.
+- `/dashboard/profile` — Profile and account preferences page.
 
-## 🚀 Deployment
+## Data & Live Behavior
+- KPI cards poll `PUT /api/dashboard` every ~8s; charts poll every ~10s for fresh data.
+- Customer table fetches on filter/sort/page changes and supports CSV export from the UI.
+- All data interactions degrade gracefully to mock datasets when MongoDB is not configured.
 
-### Vercel (Recommended)
-```bash
-npm i -g vercel
-vercel --prod
-```
+## Customization
+- Colors and design tokens: `tailwind.config.ts`
+- UI primitives: `components/ui/`
+- Charts/tables/KPI logic: `components/charts-section.tsx`, `components/data-table-section.tsx`, `components/kpi-cards.tsx`
+- Navigation and theming: `components/app-sidebar.tsx`, `components/theme-provider.tsx`
 
-### Netlify
-```bash
-npm run build
-# Upload dist folder to Netlify
-```
+## Deployment
+Optimized for Vercel (Next.js 14). Ensure `MONGODB_URI` is set in the host environment if you want persistent data; otherwise the app will serve mock data.
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is open source.
-
----
-
-**Built with ❤️ using modern web technologies**
-
-*Showcasing the power of Next.js, TypeScript, and AI-assisted development*
+## Contributing
+1. Create a feature branch
+2. Make your changes + add tests/docs as needed
+3. Open a PR
